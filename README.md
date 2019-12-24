@@ -34,7 +34,7 @@ Common:
 ```php
 'modules' => [
 	'included-areas' => [
-		'class' => 'common\modules\includes\Module',
+		'class' => 'mix8872\includes\Module',
 		'directory' => 'includes',
 		'as access' => [
 			'class' => 'yii\filters\AccessControl',
