@@ -1,6 +1,6 @@
 {
   "name": "mix8872/yii2-included-areas",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Module for create included areas in the yii2",
   "type": "yii2-extension",
   "license": "MIT",

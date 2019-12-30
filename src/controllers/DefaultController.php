@@ -36,12 +36,14 @@ class DefaultController extends Controller
         }
 
         $result[0] = array();
-        foreach ($areas as $key => $area) {
-            if ($area->group) {
-                $group = $area->group;
-                $result[$group][$key] = $area;
-            } else {
-                $result[0][$key] = $area;
+        if ($areas) {
+            foreach ($areas as $key => $area) {
+                if ($area->group) {
+                    $group = $area->group;
+                    $result[$group][$key] = $area;
+                } else {
+                    $result[0][$key] = $area;
+                }
             }
         }
         return $this->render('index', [

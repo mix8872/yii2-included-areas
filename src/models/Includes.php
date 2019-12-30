@@ -23,11 +23,13 @@ class Includes extends Model
     public const TYPE_HTML = 0;
     public const TYPE_PHP = 1;
     public const TYPE_PLAIN = 2;
+    public const TYPE_JS = 3;
 
     public static $types = [
         self::TYPE_HTML => 'html',
         self::TYPE_PHP => 'php',
         self::TYPE_PLAIN => 'plain',
+        self::TYPE_JS => 'js',
     ];
 
     public function rules()
@@ -124,7 +126,7 @@ class Includes extends Model
                     if (!$meta = static::_getMeta($fp, $last)) {
                         $content .= $last;
                     }
-                    $content .= fread($fp, filesize(Yii::getAlias("@webroot/$filename")));
+                    $content .= fread($fp, filesize(Yii::getAlias("@webroot/$filename")) + 1);
 
                     if (isset($meta['title'])) {
                         $title = $meta['title'];

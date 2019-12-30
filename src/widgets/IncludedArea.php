@@ -31,6 +31,19 @@ class IncludedArea extends Widget
         if (!file_exists($filePath)) {
             touch($filePath);
         }
+        $fp = fopen($filePath, 'r+') or error_log("Can't open the file: $filePath");
+        $meta = <<< META
+        <?php
+        /*
+         * @title $name
+         * @group 
+         * @type html
+        ?>
+        META;
+        if (!fwrite($fp, $meta)) {
+            $isWriteError = true;
+        }
+        fclose($fp);
 
         return $this->renderFile($filePath);
     }
