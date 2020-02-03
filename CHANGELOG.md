@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0
+
+Add filter to model find
+
 ## 1.2.0
 
 - Addedd js type

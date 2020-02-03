@@ -54,9 +54,18 @@ class Includes extends Model
         ];
     }
 
-    public static function find()
+    public static function find($filter = null)
     {
-        static::_getAreas($areas);
+        $areas = [];
+        static::_getAreas($areas, null, $filter);
+
+        if (isset($filter['name'])) {
+            if ($areas) {
+                return array_shift($areas);
+            } else {
+                return null;
+            }
+        }
         return $areas;
     }
 
@@ -87,7 +96,7 @@ class Includes extends Model
         META;
 
         foreach ($this->meta as $i => $item) {
-            $meta .= PHP_EOL . "* @$i $item";
+            $meta .= PHP_EOL . " * @$i $item";
         }
         $meta .= PHP_EOL . '**/' . PHP_EOL . '?>' . PHP_EOL;
 
@@ -100,7 +109,7 @@ class Includes extends Model
         return !$isWriteError;
     }
 
-    protected static function _getAreas(&$areas = null, $dir = null)
+    protected static function _getAreas(&$areas, $dir = null, $filter = null)
     {
         if (!$module = Yii::$app->getModule('included-areas')) {
             return;
@@ -114,7 +123,7 @@ class Includes extends Model
 
         foreach (glob("$dir/*", GLOB_NOSORT) as $filename) {
             if (is_dir($filename)) {
-                static::_getAreas($areas, (string)$filename);
+                static::_getAreas($areas, (string)$filename, $filter);
             } else {
                 $fp = fopen(Yii::getAlias("@webroot/$filename"), 'r') or error_log("Can't open the file: $filename");
                 if ($fp) {
@@ -123,18 +132,29 @@ class Includes extends Model
                     $type = self::TYPE_HTML;
                     $content = '';
                     $name = str_replace(['/', '.php'], ['-', ''], $filename);
+
+                    if (isset($filter['name'])) {
+                        if ($filter['name'] !== $name || count($areas) > 0) {
+                            continue;
+                        }
+                    }
+
                     if (!$meta = static::_getMeta($fp, $last)) {
                         $content .= $last;
                     }
                     $content .= fread($fp, filesize(Yii::getAlias("@webroot/$filename")) + 1);
 
+                    if (isset($meta['group'])) {
+                        if (isset($filter['group']) && $filter['group'] !== $meta['group']) {
+                            continue;
+                        }
+
+                        $group = $meta['group'];
+                        unset($meta['group']);
+                    }
                     if (isset($meta['title'])) {
                         $title = $meta['title'];
                         unset($meta['title']);
-                    }
-                    if (isset($meta['group'])) {
-                        $group = $meta['group'];
-                        unset($meta['group']);
                     }
                     if (isset($meta['type'])) {
                         $type = (int)$meta['type'];
