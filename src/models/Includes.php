@@ -207,8 +207,12 @@ class Includes extends Model
                     $myText = str_replace('*/', '', $myText);
                 }
                 $myText = mb_substr($myText, $pos);
-                [$key, $value] = explode(' ', trim($myText), 2);
-                $meta[ltrim($key, '@')] = trim($value ?? '');
+                $exp = explode(' ', trim($myText), 2);
+                $key = $exp[0] ?? null;
+                $value = $exp[1] ?? '';
+                if (isset($key, $value)) {
+                    $meta[ltrim($key, '@')] = trim($value ?? '');
+                }
             }
             if ($isComment === self::COMMENT_STRING || $isComment === self::COMMENT_END) {
                 $isComment = false;

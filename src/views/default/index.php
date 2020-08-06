@@ -44,6 +44,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?php foreach ($items as $path => $item): ?>
                                 <div class="col-lg-6 col-12 border-left">
                                     <div class="row">
+                                        <div class="col-md-12">
+                                            <h5><?= preg_replace('/(^includes-)|(_inc$)/ui', '', $item->name) ?></h5>
+                                        </div>
                                         <div class="col-md-6 col-12">
                                             <?= $form->field($item, "[{$item->name}]title") ?>
                                         </div>
@@ -85,7 +88,15 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 ])->label($item->title ?: $item->name) ?>
                                             <?php endif; ?>
                                         </div>
+                                        <?php if ($item->meta): ?>
+                                            <?php foreach ($item->meta as $metaKey => $metaValue): ?>
+                                                <div class="col-md-12">
+                                                    <?= $form->field($item, "[{$item->name}]meta[{$metaKey}]")->label($metaKey) ?>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </div>
+                                    <hr>
                                 </div>
                             <?php endforeach; ?>
                         </div>
